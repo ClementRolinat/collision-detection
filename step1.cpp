@@ -14,15 +14,16 @@ int main(int argc, char** argv) {
 
     double waypoints[2][2] = {{0,0},{40,50}};
 
-    double Pos1[2][2] = {{120,125},{140,150}};
+    double Pos1[2][2] = {{50,55},{60,65}};
     IntervalVector obstacle1Pos(2, Pos1);
 
-    double Pos2[2][2] = {{20,25},{50,55}};
+    double Pos2[2][2] = {{25,35},{50,55}};
     IntervalVector obstacle2Pos(2, Pos2);
 
     IntervalVector obstaclesPos[2] = {obstacle1Pos, obstacle2Pos};
 
-    Interval boatSpeed(4.5,5.5);
+    Interval boatSpeed;
+    boatSpeed = (sqrt(pow(waypoints[1][0],2)+pow(waypoints[1][1],2))/T.ub())*Interval(0.9,1.1);
 
     Interval boatHead;
 
