@@ -14,13 +14,13 @@ else
 CXXFLAGS := $(CXXFLAGS) 
 endif
 
-all: step1.o vibes.o
+all: step1.o vibes.o tools.o
 	$(CXX) $^ -o step1 $(CXXFLAGS) $(LIBS)
 
-ibexSLAM: ibexSLAM.o vibes.o tools.o
-	$(CXX) $^ -o ibexSLAM $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
+
+tools.o: tools.h
 
 %.o: %.c
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)

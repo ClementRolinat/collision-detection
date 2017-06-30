@@ -1,21 +1,12 @@
 #include "ibex.h"
 #include "vibes.h"
+#include "tools.h"
 #include <math.h>
 
 using namespace std;
 using namespace ibex;
 
-Interval collisionCondition(Interval v, Interval x0, Interval y0, Interval th, Interval vi, Interval xi, Interval yi, Interval thi, Interval t){
-    C1 = (v*cos(th)-vi*cos(thi))*t+xi-x0;
-    C2 = (v*sin(th)-vi*sin(thi))*t+yi-y0;
-    C3 = (v*sin(th)-vi*sin(thi))*(xi-x0)-(v*cos(th)-vi*cos(thi))*(yi-y0);
-    if (C1.contains(0) and C2.contains(0) and C3.contains(0)){
-        return 1;
-    else{
-        return 0;
-    }
-    }
-}
+
 
 int main(int argc, char** argv) {
 
@@ -23,15 +14,15 @@ int main(int argc, char** argv) {
 
     double waypoints[2][2] = {{0,0},{40,50}};
 
-    double Pos1[2][2] = {{7,12},{4.5,5.5}};
+    double Pos1[2][2] = {{120,125},{140,150}};
     IntervalVector obstacle1Pos(2, Pos1);
 
-    double Pos2[2][2] = {{50,55},{30,35}};
+    double Pos2[2][2] = {{20,25},{50,55}};
     IntervalVector obstacle2Pos(2, Pos2);
 
     IntervalVector obstaclesPos[2] = {obstacle1Pos, obstacle2Pos};
 
-    Interval boatSpeed(9,11);
+    Interval boatSpeed(4.5,5.5);
 
     Interval boatHead;
 
@@ -45,10 +36,10 @@ int main(int argc, char** argv) {
 
     vibes::beginDrawing();
     vibes::newFigure("step 1");
-    vibes::setFigureProperties(vibesParams("x", 200, "y", 100, "width", 800, "height", 800));
+    vibes::setFigureProperties(vibesParams("x", 100, "y", 100, "width", 800, "height", 800));
 
     double t = T.lb();
-    dt = 0.5;
+    double dt = 1;
     Interval x,y;
     while ( t<=T.ub()){
         x = boatSpeed*cos(boatHead)*t + boatInitPos[0];
@@ -58,12 +49,11 @@ int main(int argc, char** argv) {
     }
 
     for (int i = 0; i<2; i++){
-        if (collisionRIsk == 0){
+        if (collisionRisk == 0){
             collisionRisk = collisionCondition(boatSpeed, boatInitPos[0], boatInitPos[1], boatHead, Interval(0,0), obstaclesPos[i][0], obstaclesPos[i][1], Interval(0,0), T);
         }
         vibes::drawBox(obstaclesPos[i][0].lb(), obstaclesPos[i][0].ub(), obstaclesPos[i][1].lb(), obstaclesPos[i][1].ub(), "[red]");
 
-        }
     }
 
     
@@ -71,12 +61,4 @@ int main(int argc, char** argv) {
     
 
     vibes::endDrawing();
-
-
-    
-    
-
-
-
-
 }
