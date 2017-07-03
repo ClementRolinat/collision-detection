@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
     Interval T(0,0);
 
-    Interval obstacles[2][4] = {{Interval(1.5,1.7), Interval(30,35), Interval(-10,-8), Interval(3,3.1)},{Interval(3,3.5), Interval(10,12), Interval(0, 3), Interval(0.5,0.6)}}; // {speed, posInitx, posInity, heading}
+    Interval obstacles[2][4] = {{Interval(1.5,1.7), Interval(30,35), Interval(-10,-8), Interval(2,2.1)},{Interval(3,3.5), Interval(10,12), Interval(0, 3), Interval(0.5,0.6)}}; // {speed, posInitx, posInity, heading}
 
     bool collisionRisk = 0;
 
@@ -52,7 +52,8 @@ int main(int argc, char** argv) {
                 collisionRisk = collisionCondition(boatSpeed, boatInitPos[0], boatInitPos[1], boatHead, obstacles[i][0], obstacles[i][1], obstacles[i][2], obstacles[i][3], T);
             }
         }
-
+        cout << collisionRisk << endl;
+        
         double t = T.lb();
         double dt = 1;
         Interval x,y;
@@ -71,5 +72,5 @@ int main(int argc, char** argv) {
             t+= dt;
         }
     }
-    cout << collisionRisk << endl;
+    
 }

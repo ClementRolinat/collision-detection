@@ -14,14 +14,14 @@ else
 CXXFLAGS := $(CXXFLAGS) 
 endif
 
-step1: step1.o vibes.o tools.o
-	$(CXX) $^ -o step1 $(CXXFLAGS) $(LIBS)
+collision-detect-fix: collision-detect-fix.o vibes.o tools.o
+	$(CXX) $^ -o collision-detect-fix $(CXXFLAGS) $(LIBS)
 
-step2: step2.o vibes.o tools.o
-	$(CXX) $^ -o step2 $(CXXFLAGS) $(LIBS)
+collision-detect-mov: collision-detect-mov.o vibes.o tools.o
+	$(CXX) $^ -o collision-detect-mov $(CXXFLAGS) $(LIBS)
 
-step3: step3.o vibes.o tools.o
-	$(CXX) $^ -o step3 $(CXXFLAGS) $(LIBS)
+collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o
+	$(CXX) $^ -o collision-detect-waypts $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
 
@@ -31,5 +31,5 @@ tools.o: tools.h
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)
 
 clean:
-	rm -rf *.bak rm -rf *.o step1
+	rm -rf *.bak rm -rf *.o collision-detect-fix collision-detect-mov collision-detect-waypts
 	
