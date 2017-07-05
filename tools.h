@@ -1,8 +1,10 @@
 #include "ibex.h"
 #include <math.h>
 
+
 using namespace std;
 using namespace ibex;
+
 
 class Contractor 
 {

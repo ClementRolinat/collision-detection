@@ -4,8 +4,6 @@
 #include <math.h>
 #include <unistd.h>
 
-using namespace std;
-using namespace ibex;
 
 int main(int argc, char** argv) {
     int  nb_waypts = 3;

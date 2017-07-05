@@ -4,10 +4,6 @@
 #include "vibes.h"
 
 
-using namespace std;
-using namespace ibex;
-
-
 float width(const Interval& x){
     if (x.is_empty()){
         return 0;
