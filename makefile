@@ -23,7 +23,7 @@ collision-detect-mov: collision-detect-mov.o vibes.o tools.o
 collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o
 	$(CXX) $^ -o collision-detect-waypts $(CXXFLAGS) $(LIBS)
 
-path-planning-fix: path-planning-fix.o vibes.o
+path-planning-fix: path-planning-fix.o vibes.o tools.o
 	$(CXX) $^ -o path-planning-fix $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
@@ -34,5 +34,5 @@ tools.o: tools.h
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)
 
 clean:
-	rm -rf *.bak rm -rf *.o collision-detect-fix collision-detect-mov collision-detect-waypts
+	rm -rf *.bak rm -rf *.o collision-detect-fix collision-detect-mov collision-detect-waypts path-planning-fix
 	

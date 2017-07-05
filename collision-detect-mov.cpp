@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 
 
     vibes::beginDrawing();
-    vibes::newFigure("step 2");
+    vibes::newFigure("collision detection with moving obstacles");
     vibes::setFigureProperties(vibesParams("x", 100, "y", 100, "width", 800, "height", 800));
 
     for (int i = 0; i<2; i++){
@@ -53,11 +53,13 @@ int main(int argc, char** argv) {
         }
 
         sleep(1);
-        vibes::clearFigure("step 2");
+        vibes::clearFigure("collision detection with moving obstacles");
         t+= dt;
     }
 
     cout << collisionRisk << endl;
+
+    return 0;
 
 }
 

@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
 
 
     vibes::beginDrawing();
-    vibes::newFigure("step 1");
+    vibes::newFigure("collision detection with fixed obstacles");
     vibes::setFigureProperties(vibesParams("x", 100, "y", 100, "width", 800, "height", 800));
 
     double t = T.lb();
@@ -62,4 +62,6 @@ int main(int argc, char** argv) {
     
 
     vibes::endDrawing();
+
+    return 0;
 }

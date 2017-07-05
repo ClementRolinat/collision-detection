@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
     bool collisionRisk = 0;
 
     vibes::beginDrawing();
-    vibes::newFigure("step 3");
+    vibes::newFigure("collision detection with boat following several waypoints");
     vibes::setFigureProperties(vibesParams("x", 100, "y", 100, "width", 800, "height", 800));
 
     for ( int i = 1; i< nb_waypts; i++){
@@ -68,9 +68,10 @@ int main(int argc, char** argv) {
             }
 
             sleep(1);
-            vibes::clearFigure("step 3");
+            vibes::clearFigure("collision detection with boat following several waypoints");
             t+= dt;
         }
-    }
-    
+    }    
+
+    return 0;
 }
