@@ -23,12 +23,14 @@ collision-detect-mov: collision-detect-mov.o vibes.o tools.o
 collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o
 	$(CXX) $^ -o collision-detect-waypts $(CXXFLAGS) $(LIBS)
 
-path-planning-fix: path-planning-fix.o vibes.o tools.o
+path-planning-fix: path-planning-fix.o vibes.o tools.o node.o
 	$(CXX) $^ -o path-planning-fix $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
 
 tools.o: tools.h
+
+node.o: node.h
 
 %.o: %.c
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)

@@ -1,8 +1,10 @@
 #include "ibex.h"
 #include "vibes.h"
 #include "tools.h"
-#include <unistd.h>
+#include "node.h"
 
+using namespace std;
+using namespace ibex;
 
 int main(int argc, char** argv) {
     

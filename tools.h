@@ -2,14 +2,12 @@
 #include <math.h>
 
 
-using namespace std;
-using namespace ibex;
 
 
 class Contractor 
 {
-    public: void contract(IntervalVector& X, vector<IntervalVector> obstaclesPos){
-        IntervalVector result(2, Interval::EMPTY_SET);
+    public: void contract(ibex::IntervalVector& X, std::vector<ibex::IntervalVector> obstaclesPos){
+        ibex::IntervalVector result(2, ibex::Interval::EMPTY_SET);
         for (int i = 0; i < obstaclesPos.size(); i++){
             result = result | (X & obstaclesPos[i]);
         }
@@ -17,19 +15,19 @@ class Contractor
     }
 };
 
-float width(const Interval& x);
+float width(const ibex::Interval& x);
 
-Interval left(const Interval& x);
+ibex::Interval left(const ibex::Interval& x);
 
-Interval right(const Interval& x);
+ibex::Interval right(const ibex::Interval& x);
 
-float width(const IntervalVector& X);
+float width(const ibex::IntervalVector& X);
 
-IntervalVector left(const IntervalVector& X);
+ibex::IntervalVector left(const ibex::IntervalVector& X);
 
-IntervalVector right(const IntervalVector& X);
+ibex::IntervalVector right(const ibex::IntervalVector& X);
 
-void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obstaclesPos, vector<IntervalVector>* listBoxes);
+void paving(ibex::IntervalVector X, Contractor& contractor, std::vector<ibex::IntervalVector> obstaclesPos, std::vector<ibex::IntervalVector>* listBoxes);
 
 
-bool collisionCondition(Interval v, Interval x0, Interval y0, Interval th, Interval vi, Interval xi, Interval yi, Interval thi, Interval t);
+bool collisionCondition(ibex::Interval v, ibex::Interval x0, ibex::Interval y0, ibex::Interval th, ibex::Interval vi, ibex::Interval xi, ibex::Interval yi, ibex::Interval thi, ibex::Interval t);

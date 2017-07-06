@@ -3,7 +3,8 @@
 #include "tools.h"
 #include <math.h>
 
-
+using namespace std;
+using namespace ibex;
 
 int main(int argc, char** argv) {
 

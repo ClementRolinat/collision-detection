@@ -4,6 +4,8 @@
 #include <math.h>
 #include <unistd.h>
 
+using namespace std;
+using namespace ibex;
 
 int main(int argc, char** argv) {
     Interval T(0,30);
