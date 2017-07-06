@@ -62,29 +62,78 @@ IntervalVector right(const IntervalVector& X){
     return newX;
 }
 
-void paving(IntervalVector X, Contractor& contractor, IntervalVector obstaclesPos[]){
+void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obstaclesPos, vector<IntervalVector>* listBoxes){
     
     IntervalVector X_past(X);
     contractor.contract(X, obstaclesPos);
+    IntervalVector newBox(2);
 
-    vibes::drawBoxes({{X_past[0].lb(), X[0].lb(), X_past[1].lb(), X[1].lb()}}, "black[cyan]");
-    vibes::drawBoxes({{X[0].lb(), X[0].ub(), X_past[1].lb(), X[1].lb()}}, "black[cyan]");
-    vibes::drawBoxes({{X[0].ub(), X_past[0].ub(), X_past[1].lb(), X[1].lb()}}, "black[cyan]");
-    vibes::drawBoxes({{X[0].ub(), X_past[0].ub(), X[1].lb(), X[1].ub()}}, "black[cyan]");
-    vibes::drawBoxes({{X[0].ub(), X_past[0].ub(), X[1].ub(), X_past[1].ub()}}, "black[cyan]");
-    vibes::drawBoxes({{X[0].lb(), X[0].ub(), X[1].ub(), X_past[1].ub()}}, "black[cyan]");
-    vibes::drawBoxes({{X_past[0].lb(), X[0].lb(), X[1].ub(), X_past[1].ub()}}, "black[cyan]");
-    vibes::drawBoxes({{X_past[0].lb(), X[0].lb(), X[1].lb(), X[1].ub()}}, "black[cyan]");
+    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
+    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+    
+    newBox[0] = Interval(X[0].lb(), X[0].ub());
+    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+    
+    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
+    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+    
+    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
+    newBox[1] = Interval(X[1].lb(), X[1].ub());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+    
+    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
+    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
 
-    for (int i = 0; i< 2; i++){
-        if (X == obstaclesPos[i]){
-            vibes::drawBoxes({{X[0].lb(), X[0].ub(), X[1].lb(), X[1].ub()}}, "black[red]");
+    newBox[0] = Interval(X[0].lb(), X[0].ub());
+    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+
+    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
+    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+
+    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
+    newBox[1]= Interval(X[1].lb(), X[1].ub());
+    if (!newBox.is_flat()){
+        (*listBoxes).push_back(newBox);
+        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    }
+
+
+    for (int i = 0; i< obstaclesPos.size(); i++){
+        if (X.is_subset(obstaclesPos[i])){
+            vibes::drawBoxes({{obstaclesPos[i][0].lb(), obstaclesPos[i][0].ub(), obstaclesPos[i][1].lb(), obstaclesPos[i][1].ub()}}, "black[red]");
             return;
         }
     }
 
-    paving(left(X), contractor, obstaclesPos);
-    paving(right(X), contractor, obstaclesPos);
+    paving(left(X), contractor, obstaclesPos, listBoxes);
+    paving(right(X), contractor, obstaclesPos, listBoxes);
 }
 
 
