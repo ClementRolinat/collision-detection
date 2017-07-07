@@ -71,20 +71,13 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
     IntervalVector newBox(2);
 
     newBox[0] = Interval(X_past[0].lb(), X[0].lb());
-    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
+    newBox[1] = Interval(X_past[1].lb(), X[1].ub());
     if (!newBox.is_flat()){
         (*listBoxes).push_back(newBox);
         vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
     }
     
-    newBox[0] = Interval(X[0].lb(), X[0].ub());
-    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-    
-    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
+    newBox[0] = Interval(X[0].lb(), X_past[0].ub());
     newBox[1] = Interval(X_past[1].lb(), X[1].lb());
     if (!newBox.is_flat()){
         (*listBoxes).push_back(newBox);
@@ -92,35 +85,14 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
     }
     
     newBox[0] = Interval(X[0].ub(), X_past[0].ub());
-    newBox[1] = Interval(X[1].lb(), X[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-    
-    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
-    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
+    newBox[1] = Interval(X[1].lb(), X_past[1].ub());
     if (!newBox.is_flat()){
         (*listBoxes).push_back(newBox);
         vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
     }
 
-    newBox[0] = Interval(X[0].lb(), X[0].ub());
+    newBox[0] = Interval(X_past[0].lb(), X[0].ub());
     newBox[1] = Interval(X[1].ub(), X_past[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-
-    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
-    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-
-    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
-    newBox[1]= Interval(X[1].lb(), X[1].ub());
     if (!newBox.is_flat()){
         (*listBoxes).push_back(newBox);
         vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
@@ -136,6 +108,28 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
 
     paving(left(X), contractor, obstaclesPos, listBoxes);
     paving(right(X), contractor, obstaclesPos, listBoxes);
+}
+
+void release(Node* a, Node* b){
+    if (b->getDist() > (a->getDist() + 1)){
+        b->setDist(a->getDist()+1);
+        b->setPred(a);
+    }
+}
+
+Node* extractMin(vector<Node*> &Queue){
+    Node* pNodeMinDist = Queue[0];
+    double minDist = Queue[0]->getDist();
+    int position = 0;
+    for ( int i = 0; i < Queue.size(); i++){
+        if (Queue[i]->getDist() < minDist){
+            pNodeMinDist = Queue[i];
+            minDist = Queue[i]->getDist();
+            position = i;
+        }
+    }
+    Queue.erase(Queue.begin() + position);
+    return pNodeMinDist;
 }
 
 

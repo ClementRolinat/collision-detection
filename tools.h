@@ -1,5 +1,6 @@
 #include "ibex.h"
 #include <math.h>
+#include "node.h"
 
 
 
@@ -29,5 +30,8 @@ ibex::IntervalVector right(const ibex::IntervalVector& X);
 
 void paving(ibex::IntervalVector X, Contractor& contractor, std::vector<ibex::IntervalVector> obstaclesPos, std::vector<ibex::IntervalVector>* listBoxes);
 
+void release(Node* a, Node* b);
+
+Node* extractMin(std::vector<Node*> &Queue);
 
 bool collisionCondition(ibex::Interval v, ibex::Interval x0, ibex::Interval y0, ibex::Interval th, ibex::Interval vi, ibex::Interval xi, ibex::Interval yi, ibex::Interval thi, ibex::Interval t);
