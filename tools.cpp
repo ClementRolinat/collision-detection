@@ -68,36 +68,22 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
     
     IntervalVector X_past(X);
     contractor.contract(X, obstaclesPos);
+
+    
     IntervalVector newBox(2);
 
-    newBox[0] = Interval(X_past[0].lb(), X[0].lb());
-    newBox[1] = Interval(X_past[1].lb(), X[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+    IntervalVector* ListComplementary;
+
+    int size = X.complementary(ListComplementary);
+
+    for ( int i = 0; i < size; i++){
+        newBox = ListComplementary[i]&X_past;
+        if (!newBox.is_flat()){
+            (*listBoxes).push_back(newBox);
+            vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
+        }
     }
     
-    newBox[0] = Interval(X[0].lb(), X_past[0].ub());
-    newBox[1] = Interval(X_past[1].lb(), X[1].lb());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-    
-    newBox[0] = Interval(X[0].ub(), X_past[0].ub());
-    newBox[1] = Interval(X[1].lb(), X_past[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-
-    newBox[0] = Interval(X_past[0].lb(), X[0].ub());
-    newBox[1] = Interval(X[1].ub(), X_past[1].ub());
-    if (!newBox.is_flat()){
-        (*listBoxes).push_back(newBox);
-        vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "black[cyan]");
-    }
-
 
     for (int i = 0; i< obstaclesPos.size(); i++){
         if (X.is_subset(obstaclesPos[i])){
@@ -105,6 +91,7 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
             return;
         }
     }
+
 
     paving(left(X), contractor, obstaclesPos, listBoxes);
     paving(right(X), contractor, obstaclesPos, listBoxes);

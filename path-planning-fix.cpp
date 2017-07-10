@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
 
-    double Pos1[2][2] = {{35,39},{20,24}};
+    double Pos1[2][2] = {{30,34},{30,34}};
     IntervalVector obstacle1Pos(2, Pos1);
 
     double Pos2[2][2] = {{27,32},{47,51}};
@@ -66,6 +66,10 @@ int main(int argc, char** argv) {
             }
         }
     }
+/*
+    for (int i = 0; listNodes.size(); i++){
+        cout << listNodes[i].getValue() << endl;
+    }*/
 
 
     vector<Node*> priorityQueue;
