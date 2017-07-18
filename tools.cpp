@@ -64,7 +64,7 @@ IntervalVector right(const IntervalVector& X){
     return newX;
 }
 
-void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obstaclesPos, vector<IntervalVector>* listBoxes){
+void pavingFix(IntervalVector X, Contractor& contractor, vector<IntervalVector> obstaclesPos, vector<IntervalVector>* listBoxes){
     
     IntervalVector X_past(X);
     contractor.contract(X, obstaclesPos);
@@ -93,8 +93,8 @@ void paving(IntervalVector X, Contractor& contractor, vector<IntervalVector> obs
     }
 
 
-    paving(left(X), contractor, obstaclesPos, listBoxes);
-    paving(right(X), contractor, obstaclesPos, listBoxes);
+    pavingFix(left(X), contractor, obstaclesPos, listBoxes);
+    pavingFix(right(X), contractor, obstaclesPos, listBoxes);
 }
 
 void release(Node* a, Node* b){

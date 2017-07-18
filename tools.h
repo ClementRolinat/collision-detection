@@ -28,7 +28,7 @@ ibex::IntervalVector left(const ibex::IntervalVector& X);
 
 ibex::IntervalVector right(const ibex::IntervalVector& X);
 
-void paving(ibex::IntervalVector X, Contractor& contractor, std::vector<ibex::IntervalVector> obstaclesPos, std::vector<ibex::IntervalVector>* listBoxes);
+void pavingFix(ibex::IntervalVector X, Contractor& contractor, std::vector<ibex::IntervalVector> obstaclesPos, std::vector<ibex::IntervalVector>* listBoxes);
 
 void release(Node* a, Node* b);
 

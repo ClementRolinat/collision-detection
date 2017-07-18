@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     IntervalVector X(2, _X);
 
     vector<IntervalVector> listBoxes;
-    paving(X, contractor, obstaclesPos, &listBoxes);
+    pavingFix(X, contractor, obstaclesPos, &listBoxes);
 
 
     

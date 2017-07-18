@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
 
-    Interval obstacles[2][4] = {{Interval(2,2.4), Interval(30,35), Interval(-10,-8), Interval(2,2.1)},{Interval(3,3.5), Interval(10,12), Interval(0, 3), Interval(0.5,0.6)}}; // {speed, posInitx, posInity, heading}
+    Interval obstacles[2][4] = {{Interval(2.3,2.4), Interval(30,31), Interval(-10,-9), Interval(2.2,2.3)},{Interval(0,0), Interval(50,52), Interval(20, 22), Interval(2,2.3)}}; // {speed, posInitx, posInity, heading}
 
     bool collisionRisk = 0;
 

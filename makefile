@@ -14,17 +14,20 @@ else
 CXXFLAGS := $(CXXFLAGS) 
 endif
 
-collision-detect-fix: collision-detect-fix.o vibes.o tools.o
+collision-detect-fix: collision-detect-fix.o vibes.o tools.o node.o
 	$(CXX) $^ -o collision-detect-fix $(CXXFLAGS) $(LIBS)
 
-collision-detect-mov: collision-detect-mov.o vibes.o tools.o
+collision-detect-mov: collision-detect-mov.o vibes.o tools.o node.o
 	$(CXX) $^ -o collision-detect-mov $(CXXFLAGS) $(LIBS)
 
-collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o
+collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o node.o
 	$(CXX) $^ -o collision-detect-waypts $(CXXFLAGS) $(LIBS)
 
 path-planning-fix: path-planning-fix.o vibes.o tools.o node.o
 	$(CXX) $^ -o path-planning-fix $(CXXFLAGS) $(LIBS)
+
+path-planning-mov: path-planning-mov.o vibes.o tools.o node.o
+	$(CXX) $^ -o path-planning-mov $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
 
@@ -36,5 +39,5 @@ node.o: node.h
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)
 
 clean:
-	rm -rf *.bak rm -rf *.o collision-detect-fix collision-detect-mov collision-detect-waypts path-planning-fix
+	rm -rf *.bak rm -rf *.o collision-detect-fix collision-detect-mov collision-detect-waypts path-planning-fix path-planning-mov
 	
