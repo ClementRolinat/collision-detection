@@ -11,7 +11,7 @@ LIBS	 = $(shell pkg-config --libs  ibex)
 ifeq ($(DEBUG), yes)
 CXXFLAGS := $(CXXFLAGS) -O0 -g -pg -Wall
 else
-CXXFLAGS := $(CXXFLAGS) 
+CXXFLAGS := $(CXXFLAGS)
 endif
 
 collision-detect-fix: collision-detect-fix.o vibes.o tools.o node.o
