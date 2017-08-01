@@ -38,19 +38,23 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     vector<IntervalVector> listXin;
 
     //sleep(1);
+    /*
     cout << endl;
     cout << "initial box : " << speed << endl;
+    */
     for (int i = 0; i < listSep.size(); i++){
         listSep[i]->SepInter::separate(Xin, Xout);
         listXout.push_back(Xout);
         listXin.push_back(Xin);
+        /*
         sleep(1);
-        vibes::drawBoxes({{Xin[0].lb(), Xin[0].ub(), Xin[1].lb(), Xin[1].ub()}}, "[green]");
-        sleep(1);
-        vibes::drawBoxes({{Xout[0].lb(), Xout[0].ub(), Xout[1].lb(), Xout[1].ub()}}, "[red]");
+        //vibes::drawBoxes({{Xin[0].lb(), Xin[0].ub(), Xin[1].lb(), Xin[1].ub()}}, "[green]");
+        //sleep(1);
+        //vibes::drawBoxes({{Xout[0].lb(), Xout[0].ub(), Xout[1].lb(), Xout[1].ub()}}, "[red]");
         cout << "separator " << i+1 << endl;
         cout << "Xin " << Xin << endl;
         cout << "Xout " << Xout << endl;
+        */
         Xin = speed;
         Xout = speed;
     }
@@ -81,12 +85,12 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
         newBox = ListComplementary[i]&speed;
         if (!newBox.is_flat()){
             listBoxes.push_back(newBox);
-            //vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "[cyan]");
+            vibes::drawBoxes({{newBox[0].lb(), newBox[0].ub(), newBox[1].lb(), newBox[1].ub()}}, "[cyan]");
         }
     }
 
     
-    //vibes::drawBoxes({{XoutEnd[0].lb(), XoutEnd[0].ub(), XoutEnd[1].lb(), XoutEnd[1].ub()}}, "[red]");
+    vibes::drawBoxes({{XoutEnd[0].lb(), XoutEnd[0].ub(), XoutEnd[1].lb(), XoutEnd[1].ub()}}, "[red]");
 
     //sleep(1);
       
@@ -99,7 +103,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     cout << "maybe " << maybeBox << endl;
     */
 
-    //vibes::drawBoxes({{maybeBox[0].lb(), maybeBox[0].ub(), maybeBox[1].lb(), maybeBox[1].ub()}}, "[yellow]");
+    vibes::drawBoxes({{maybeBox[0].lb(), maybeBox[0].ub(), maybeBox[1].lb(), maybeBox[1].ub()}}, "[yellow]");
     //sleep(1);
     pavingMov(left(maybeBox), listSep, listBoxes);
     
@@ -111,7 +115,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
 int main(int argc, char** argv) {
     Interval T(0,30);
 
-    vector<vector<double>> border = {{-120, 0},{0, 120},{120, 0},{0, -120}};
+    vector<vector<double>> border = {{-150, 0},{0, 150},{150, 0},{0, -150}};
 
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
@@ -122,11 +126,11 @@ int main(int argc, char** argv) {
 
     vector<IntervalVector> obstacles;
     double pos1[4][2] = {{2, 2.1}, {30, 31}, {-10, -9}, {2.9, 3.1}}; // {speed, posInitx, posInity, heading}
-    double pos2[4][2] = {{3, 3.1}, {10, 11}, {0, 1}, {0.5, 0.6}};
+    double pos2[4][2] = {{3, 3.1}, {10, 11}, {0, 1}, {2.0, 2.2}};
     IntervalVector obs1(4, pos1);
     IntervalVector obs2(4, pos2);
-    //obstacles.push_back(obs1);
-    //obstacles.push_back(obs2);
+    obstacles.push_back(obs1);
+    obstacles.push_back(obs2);
 
 
 
@@ -149,20 +153,20 @@ int main(int argc, char** argv) {
 
     
     for (int i = 0; i < border.size(); i++){
-        pf1 = new Function(vx, vy, ((border[i][0] - (vx*T + boatInitPos[0]))*(border[i][1] - boatInitPos[1]) - 
-                                                    (border[i][1] - (vy*T + boatInitPos[1]))*(border[i][0] - boatInitPos[0]))*
-                                                    ((border[(i+1)%border.size()][0] - (vx*T + boatInitPos[0]))*(border[(i+1)%border.size()][1] - boatInitPos[1]) - 
-                                                    (border[(i+1)%border.size()][1] - (vy*T + boatInitPos[1]))*(border[(i+1)%border.size()][0] - boatInitPos[0]))
+        pf1 = new Function(vx, vy, ((border[i][0] - (vx*T.ub() + boatInitPos[0]))*(border[i][1] - boatInitPos[1]) - 
+                                                    (border[i][1] - (vy*T.ub() + boatInitPos[1]))*(border[i][0] - boatInitPos[0]))*
+                                                    ((border[(i+1)%border.size()][0] - (vx*T.ub() + boatInitPos[0]))*(border[(i+1)%border.size()][1] - boatInitPos[1]) - 
+                                                    (border[(i+1)%border.size()][1] - (vy*T.ub() + boatInitPos[1]))*(border[(i+1)%border.size()][0] - boatInitPos[0]))
                          );
         
         pf2 = new Function(vx, vy, ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - boatInitPos[1]) - 
                                                     (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - boatInitPos[0]))*
-                                                    ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - (vy*T + boatInitPos[1])) - 
-                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - (vx*T + boatInitPos[0])))
+                                                    ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - (vy*T.ub() + boatInitPos[1])) - 
+                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - (vx*T.ub() + boatInitPos[0])))
                                     );
         
-        pSep1 = new SepFwdBwd(*pf1, LT);
-        pSep2 = new SepFwdBwd(*pf2, LT);
+        pSep1 = new SepFwdBwd(*pf1, LEQ);
+        pSep2 = new SepFwdBwd(*pf2, LEQ);
         pSep = new SepInter(*pSep1, *pSep2);
 
         listSep.push_back(pSep);
