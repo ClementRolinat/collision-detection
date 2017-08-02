@@ -21,6 +21,53 @@ IntervalVector findClosest(vector<IntervalVector> listBoxes, IntervalVector boat
     return outputBox;
 }
 
+void createSepBorder(vector<vector<double>> border, vector <SepInter*> &listSep, IntervalVector boatInitPos, Interval T){
+    Variable vx, vy;
+    Function* pf1;
+    Function* pf2;
+    Function* pf3;
+    Function* pf4;
+    SepFwdBwd* pSep1;
+    SepFwdBwd* pSep2;
+    SepFwdBwd* pSep3;
+    SepFwdBwd* pSep4;
+    SepInter* pSep;    
+
+    for (int i = 0; i < border.size(); i++){
+        pf1 = new Function(vx, vy, ((border[i][0] - (vx*T.ub() + boatInitPos[0]))*(border[i][1] - boatInitPos[1]) - 
+                                                    (border[i][1] - (vy*T.ub() + boatInitPos[1]))*(border[i][0] - boatInitPos[0]))*
+                                                    ((border[(i+1)%border.size()][0] - (vx*T.ub() + boatInitPos[0]))*(border[(i+1)%border.size()][1] - boatInitPos[1]) - 
+                                                    (border[(i+1)%border.size()][1] - (vy*T.ub() + boatInitPos[1]))*(border[(i+1)%border.size()][0] - boatInitPos[0]))
+                                                    );
+        
+        pf2 = new Function(vx, vy, ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - boatInitPos[1]) - 
+                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - boatInitPos[0]))*
+                                                    ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - (vy*T.ub() + boatInitPos[1])) - 
+                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - (vx*T.ub() + boatInitPos[0])))
+                                                    );
+        
+        pf3 = new Function(vx, vy, max(abs(max(border[i][0], border[(i+1)%border.size()][0]) - max(boatInitPos[0].ub(), vx*T.ub() + boatInitPos[0].ub())), sqrt(sqr(min(boatInitPos[0].lb(), vx*T.ub() + boatInitPos[0].lb()) - min(border[i][0], border[(i+1)%border.size()][0])))) -
+                                                    max(max(border[i][0], border[(i+1)%border.size()][0]) - min(border[i][0], border[(i+1)%border.size()][0]), max(boatInitPos[0].ub(), vx*T.ub() + boatInitPos[0].ub()) - min(boatInitPos[0].lb(), vx*T.ub() + boatInitPos[0].lb()))
+                                                    );
+
+        pf4 = new Function(vx, vy, max(abs(max(border[i][1], border[(i+1)%border.size()][1]) - max(boatInitPos[1].ub(), vy*T.ub() + boatInitPos[1].ub())), sqrt(sqr(min(boatInitPos[1].lb(), vy*T.ub() + boatInitPos[1].lb()) - min(border[i][1], border[(i+1)%border.size()][1])))) -
+                                                    max(max(border[i][1], border[(i+1)%border.size()][1]) - min(border[i][1], border[(i+1)%border.size()][1]), max(boatInitPos[1].ub(), vy*T.ub() + boatInitPos[1].ub()) - min(boatInitPos[1].lb(), vy*T.ub() + boatInitPos[1].lb()))
+                                                    );
+        
+
+        pSep1 = new SepFwdBwd(*pf1, LEQ);
+        pSep2 = new SepFwdBwd(*pf2, LEQ);
+        
+        pSep3 = new SepFwdBwd(*pf3, LEQ);
+        pSep4 = new SepFwdBwd(*pf4, LEQ);
+        
+        pSep = new SepInter(*pSep1, *pSep2, *pSep3, *pSep4);
+
+        listSep.push_back(pSep);
+    }
+}
+
+
 void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalVector>& listBoxes){
     if (speed.is_empty()){
         return;
@@ -38,43 +85,24 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     vector<IntervalVector> listXin;
 
     //sleep(1);
-    /*
-    cout << endl;
-    cout << "initial box : " << speed << endl;
-    */
+
     for (int i = 0; i < listSep.size(); i++){
+        
         listSep[i]->SepInter::separate(Xin, Xout);
         listXout.push_back(Xout);
         listXin.push_back(Xin);
-        /*
-        sleep(1);
-        //vibes::drawBoxes({{Xin[0].lb(), Xin[0].ub(), Xin[1].lb(), Xin[1].ub()}}, "[green]");
-        //sleep(1);
-        //vibes::drawBoxes({{Xout[0].lb(), Xout[0].ub(), Xout[1].lb(), Xout[1].ub()}}, "[red]");
-        cout << "separator " << i+1 << endl;
-        cout << "Xin " << Xin << endl;
-        cout << "Xout " << Xout << endl;
-        */
         Xin = speed;
         Xout = speed;
     }
 
     XoutEnd = listXout[0];
     XinEnd = listXin[0];
-   //cout << "nouvelle interation" << endl; 
+ 
     for (int i = 1; i < listXout.size(); i++ ){
-        //cout << "Xout " << i << " " << listXout[i] << endl;
-        //cout << "Xin " << i << " " << listXin[i] << endl;
         XoutEnd = XoutEnd | listXout[i];
         XinEnd = XinEnd & listXin[i];
     }
-    /*
-    if (XoutEnd != XinEnd){
-        cout << "___________________________________________________________________________________________________" << endl;
-        cout << "Xout final " << XoutEnd << endl;
-        cout << "Xin final " << XinEnd << endl;
-    }
-    */
+ 
     IntervalVector newBox(2);
 
     IntervalVector* ListComplementary;
@@ -96,13 +124,6 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
       
     maybeBox = XinEnd & XoutEnd;
 
-/*
-    cout << "\n" << endl;
-    cout << "Xout " << XoutEnd << endl;
-    cout << "Xin " << XinEnd << endl;
-    cout << "maybe " << maybeBox << endl;
-    */
-
     vibes::drawBoxes({{maybeBox[0].lb(), maybeBox[0].ub(), maybeBox[1].lb(), maybeBox[1].ub()}}, "[yellow]");
     //sleep(1);
     pavingMov(left(maybeBox), listSep, listBoxes);
@@ -115,7 +136,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
 int main(int argc, char** argv) {
     Interval T(0,30);
 
-    vector<vector<double>> border = {{-140, 0}, {-200, 0},{0, 150},{140, 0}, {200, 0}, {0, -150}};
+    vector<vector<vector<double>>> borderList = {{{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}}};
 
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
@@ -140,48 +161,19 @@ int main(int argc, char** argv) {
     vibes::setFigureProperties(vibesParams("x", 100, "y", 100, "width", 800, "height", 800));
 
 
+    
     Variable vx, vy;
     vector<SepInter*> listSep;
     Function* pf1;
     Function* pf2;
     Function* pf3;
-    Function* pf4;
     SepFwdBwd* pSep1;
     SepFwdBwd* pSep2;
     SepFwdBwd* pSep3;
-    SepFwdBwd* pSep4;
-    SepInter* pSep;    
+    SepInter* pSep;
 
-    
-    for (int i = 0; i < border.size(); i++){
-        pf1 = new Function(vx, vy, ((border[i][0] - (vx*T.ub() + boatInitPos[0]))*(border[i][1] - boatInitPos[1]) - 
-                                                    (border[i][1] - (vy*T.ub() + boatInitPos[1]))*(border[i][0] - boatInitPos[0]))*
-                                                    ((border[(i+1)%border.size()][0] - (vx*T.ub() + boatInitPos[0]))*(border[(i+1)%border.size()][1] - boatInitPos[1]) - 
-                                                    (border[(i+1)%border.size()][1] - (vy*T.ub() + boatInitPos[1]))*(border[(i+1)%border.size()][0] - boatInitPos[0]))
-                         );
-        
-        pf2 = new Function(vx, vy, ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - boatInitPos[1]) - 
-                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - boatInitPos[0]))*
-                                                    ((border[(i+1)%border.size()][0] - border[i][0])*(border[i][1] - (vy*T.ub() + boatInitPos[1])) - 
-                                                    (border[(i+1)%border.size()][1] - border[i][1])*(border[i][0] - (vx*T.ub() + boatInitPos[0])))
-                                    );
-        
-        pf3 = new Function(vx, vy, max(abs(max(border[i][0], border[(i+1)%border.size()][0]) - max(boatInitPos[0].ub(), vx*T.ub() + boatInitPos[0].ub())), sqrt(sqr(min(boatInitPos[0].lb(), vx*T.ub() + boatInitPos[0].lb()) - min(border[i][0], border[(i+1)%border.size()][0])))) -
-                                                    max(max(border[i][0], border[(i+1)%border.size()][0]) - min(border[i][0], border[(i+1)%border.size()][0]), max(boatInitPos[0].ub(), vx*T.ub() + boatInitPos[0].ub()) - min(boatInitPos[0].lb(), vx*T.ub() + boatInitPos[0].lb())));
-
-        pf4 = new Function(vx, vy, max(abs(max(border[i][1], border[(i+1)%border.size()][1]) - max(boatInitPos[1].ub(), vy*T.ub() + boatInitPos[1].ub())), sqrt(sqr(min(boatInitPos[1].lb(), vy*T.ub() + boatInitPos[1].lb()) - min(border[i][1], border[(i+1)%border.size()][1])))) -
-                                                    max(max(border[i][1], border[(i+1)%border.size()][1]) - min(border[i][1], border[(i+1)%border.size()][1]), max(boatInitPos[1].ub(), vy*T.ub() + boatInitPos[1].ub()) - min(boatInitPos[1].lb(), vy*T.ub() + boatInitPos[1].lb())));
-        
-
-        pSep1 = new SepFwdBwd(*pf1, LEQ);
-        pSep2 = new SepFwdBwd(*pf2, LEQ);
-        
-        pSep3 = new SepFwdBwd(*pf3, LEQ);
-        pSep4 = new SepFwdBwd(*pf4, LEQ);
-        
-        pSep = new SepInter(*pSep1, *pSep2, *pSep3, *pSep4);
-
-        listSep.push_back(pSep);
+    for (int i = 0; i<borderList.size(); i++){
+        createSepBorder(borderList[i], listSep, boatInitPos, T);
     }
     
 
@@ -205,8 +197,6 @@ int main(int argc, char** argv) {
     vector<IntervalVector> listBoxes;
 
     pavingMov(speed, listSep, listBoxes);
-
-    delete pf1, pf2, pf3, pf4, pSep1, pSep2, pSep3, pSep, listSep;
 
     
     vibes::drawBoxes({{boatSpeed[0].lb(), boatSpeed[0].ub(), boatSpeed[1].lb(), boatSpeed[1].ub()}}, "[red]");
