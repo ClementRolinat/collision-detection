@@ -125,6 +125,9 @@ bool collisionCondition(Interval v, Interval x0, Interval y0, Interval th, Inter
     C1 = (v*cos(th)-vi*cos(thi))*t+x0-xi;
     C2 = (v*sin(th)-vi*sin(thi))*t+y0-yi;
     C3 = (v*sin(th)-vi*sin(thi))*(x0-xi)-(v*cos(th)-vi*cos(thi))*(y0-yi);
+    cout << "C1 " << C1 << endl;
+    cout << "C2 " << C2 << endl;
+    cout << "C3 "  << C3 << endl;
     if (C1.contains(0) and C2.contains(0) and C3.contains(0)){
         return 1;
     }
