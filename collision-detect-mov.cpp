@@ -1,3 +1,5 @@
+#include <thread>
+#include <chrono>
 #include "ibex.h"
 #include "vibes.h"
 #include "tools.h"
@@ -38,7 +40,7 @@ int main(int argc, char** argv) {
     }
 
     double t = T.lb();
-    double dt = 1;
+    double dt = 0.5;
     Interval x,y;
     while ( t<=T.ub()){
         x = boatSpeed*cos(boatHead)*t + boatInitPos[0];
@@ -50,7 +52,7 @@ int main(int argc, char** argv) {
             vibes::drawBox(x.lb(), x.ub(), y.lb(), y.ub(), "[red]");
         }
 
-        sleep(1);
+        this_thread::sleep_for(chrono::milliseconds(100));
         vibes::clearFigure("collision detection with moving obstacles");
         t+= dt;
     }
