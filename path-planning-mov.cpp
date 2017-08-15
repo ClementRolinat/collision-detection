@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
 
     vector<vector<vector<double>>> borderList = {{{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}}};
 
-    double pos[2][2] ={{-1,1},{-1,1}};
+    double pos[2][2] ={{-30,-28},{89,91}};
     IntervalVector boatInitPos(2, pos);
 
     double _boatSpeed[2][2] = {{-1.4,-1.2}, {-0.5,-0.3}};
