@@ -1,6 +1,7 @@
 #include "ibex.h"
 #include "vibes.h"
 #include "tools.h"
+#include "sepProj.h"
 
 
 using namespace std;
@@ -137,7 +138,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
 int main(int argc, char** argv) {
     Interval T(0,30);
 
-    vector<vector<vector<double>>> borderList = {{{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}}};
+    vector<vector<vector<double>>> borderList = {{/*{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}*/}};
 
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
@@ -163,7 +164,7 @@ int main(int argc, char** argv) {
 
 
     
-    Variable vx, vy;
+    Variable vx, vy, ai, bi;
     vector<SepInter*> listSep;
     Function* pf1;
     Function* pf2;
@@ -171,6 +172,8 @@ int main(int argc, char** argv) {
     SepFwdBwd* pSep1;
     SepFwdBwd* pSep2;
     SepFwdBwd* pSep3;
+    SepProj* pSepProj1;
+    SepProj* pSepProj2;
     SepInter* pSep;
 
     for (int i = 0; i<borderList.size(); i++){
@@ -179,14 +182,17 @@ int main(int argc, char** argv) {
     
 
     for ( int i = 0; i < obstacles.size(); i++){
-        pf1 = new Function(vx, vy, (vx - obstacles[i][0]*cos(obstacles[i][3]))*T + boatInitPos[0] - obstacles[i][1]);
-        pf2 = new Function(vx, vy, (vy - obstacles[i][0]*sin(obstacles[i][3]))*T + boatInitPos[1] - obstacles[i][2]);
+        pf1 = new Function(vx, vy, ai, (vx - ai)*T);
+        pf2 = new Function(vx, vy, bi, (vy - bi)*T);
         pf3 = new Function(vx, vy, (vy - obstacles[i][0]*sin(obstacles[i][3]))*(boatInitPos[0] - obstacles[i][1]) - (vx - obstacles[i][0]*cos(obstacles[i][3]))*(boatInitPos[1] - obstacles[i][2]));
 
-        pSep1 = new SepFwdBwd(*pf1, Interval(0,0));
-        pSep2 = new SepFwdBwd(*pf2, Interval(0,0));
+        pSep1 = new SepFwdBwd(*pf1, obstacles[i][1] - boatInitPos[0]);
+        pSep2 = new SepFwdBwd(*pf2, obstacles[i][2] - boatInitPos[1]);
         pSep3 = new SepFwdBwd(*pf3, Interval(0,0));
-        pSep = new SepInter(*pSep1, *pSep2, *pSep3);
+        pSepProj1 = new SepProj(*pSep1, obstacles[i][0]*cos(obstacles[i][3]), 1);
+        pSepProj2 = new SepProj(*pSep2, obstacles[i][0]*sin(obstacles[i][3]), 1);
+
+        pSep = new SepInter(*pSepProj1, *pSepProj2, *pSep3);
 
         listSep.push_back(pSep);
     }
@@ -200,11 +206,11 @@ int main(int argc, char** argv) {
     pavingMov(speed, listSep, listBoxes);
 
     
-    vibes::drawBoxes({{boatSpeed[0].lb(), boatSpeed[0].ub(), boatSpeed[1].lb(), boatSpeed[1].ub()}}, "[blue]");
+    //vibes::drawBoxes({{boatSpeed[0].lb(), boatSpeed[0].ub(), boatSpeed[1].lb(), boatSpeed[1].ub()}}, "[blue]");
 
     IntervalVector newSpeed = findClosest(listBoxes, boatSpeed);
 
-    vibes::drawBoxes({{newSpeed[0].lb(), newSpeed[0].ub(), newSpeed[1].lb(), newSpeed[1].ub()}}, "[green]");
+    //vibes::drawBoxes({{newSpeed[0].lb(), newSpeed[0].ub(), newSpeed[1].lb(), newSpeed[1].ub()}}, "[green]");
 
     return 0;
 
