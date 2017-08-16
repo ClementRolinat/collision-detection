@@ -72,7 +72,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     if (speed.is_empty()){
         return;
     }
-    else if (speed.max_diam() < 0.3){
+    else if (speed.max_diam() < 0.5){
         return;
     }
 
@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
 
     vector<vector<vector<double>>> borderList = {{{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}}};
 
-    double pos[2][2] ={{-30,-28},{89,91}};
+    double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
 
     double _boatSpeed[2][2] = {{-1.4,-1.2}, {-0.5,-0.3}};
@@ -199,7 +199,7 @@ int main(int argc, char** argv) {
     pavingMov(speed, listSep, listBoxes);
 
     
-    vibes::drawBoxes({{boatSpeed[0].lb(), boatSpeed[0].ub(), boatSpeed[1].lb(), boatSpeed[1].ub()}}, "[red]");
+    vibes::drawBoxes({{boatSpeed[0].lb(), boatSpeed[0].ub(), boatSpeed[1].lb(), boatSpeed[1].ub()}}, "[blue]");
 
     IntervalVector newSpeed = findClosest(listBoxes, boatSpeed);
 
