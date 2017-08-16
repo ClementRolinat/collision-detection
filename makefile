@@ -26,7 +26,7 @@ collision-detect-waypts: collision-detect-waypts.o vibes.o tools.o node.o
 path-planning-fix: path-planning-fix.o vibes.o tools.o node.o
 	$(CXX) $^ -o path-planning-fix $(CXXFLAGS) $(LIBS)
 
-path-planning-mov: path-planning-mov.o vibes.o tools.o node.o
+path-planning-mov: path-planning-mov.o sepProj.o vibes.o tools.o node.o
 	$(CXX) $^ -o path-planning-mov $(CXXFLAGS) $(LIBS)
 
 vibes.o: vibes.h
@@ -34,6 +34,8 @@ vibes.o: vibes.h
 tools.o: tools.h
 
 node.o: node.h
+
+sepProj.o: sepProj.h
 
 %.o: %.c
 	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LIBS)
