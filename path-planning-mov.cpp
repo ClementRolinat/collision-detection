@@ -75,7 +75,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     if (speed.is_empty()){
         return;
     }
-    else if (speed.max_diam() < 0.5){
+    else if (speed.max_diam() < 0.1){
         return;
     }
 
@@ -198,9 +198,9 @@ int main(int argc, char** argv) {
         pSep1 = new SepFwdBwd(*pf1, obstacles[i][1] - boatInitPos[0]);
         pSep2 = new SepFwdBwd(*pf2, obstacles[i][2] - boatInitPos[1]);
         pSep3 = new SepFwdBwd(*pf3, (obstacles[i][2] - boatInitPos[1])/(obstacles[i][1] - boatInitPos[0]));
-        pSepProj1 = new SepProj(*pSep1, proj, 10);
-        pSepProj2 = new SepProj(*pSep2, proj, 10);
-        pSepProj3 = new SepProj(*pSep3, proj, 10);
+        pSepProj1 = new SepProj(*pSep1, proj, 1000000);
+        pSepProj2 = new SepProj(*pSep2, proj, 1000000);
+        pSepProj3 = new SepProj(*pSep3, proj, 1000000);
 
         pSep = new SepInter(*pSepProj1, *pSepProj2, *pSepProj3);
 
