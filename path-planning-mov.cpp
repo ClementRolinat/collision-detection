@@ -75,7 +75,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     if (speed.is_empty()){
         return;
     }
-    else if (speed.max_diam() < 0.1){
+    else if (speed.max_diam() < 0.2){
         return;
     }
 
@@ -141,7 +141,7 @@ int main(int argc, char** argv) {
 
     Interval T(0,30);
 
-    vector<vector<vector<double>>> borderList = {{/*{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}*/}};
+    vector<vector<vector<double>>> borderList = {{{-200, 0}, {-300, 0},{0, 200},{200, 0}, {300, 0}, {0, -200}}, {{-60, 0}, {-60, 50}, {-110, 50}, {-110, 0}}};
 
     double pos[2][2] ={{-1,1},{-1,1}};
     IntervalVector boatInitPos(2, pos);
