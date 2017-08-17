@@ -75,7 +75,7 @@ void pavingMov(IntervalVector speed, vector<SepInter*> listSep, vector<IntervalV
     if (speed.is_empty()){
         return;
     }
-    else if (speed.max_diam() < 0.2){
+    else if (speed.max_diam() < 0.5){
         return;
     }
 
