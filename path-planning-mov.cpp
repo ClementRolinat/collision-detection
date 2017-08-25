@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
 
 
     vector<IntervalVector> obstacles;
-    double pos1[4][2] = {{2, 2.1}, {30, 31}, {-10, -9}, {2.9, 3.1}}; // {speed, posInitx, posInity, heading}
+    double pos1[4][2] = {{2, 2.1}, {2, 4}, {-10, -8}, {2.9, 3.1}}; // {speed, posInitx, posInity, heading}
     double pos2[4][2] = {{3, 3.1}, {10, 11}, {0, 1}, {2.0, 2.2}};
     IntervalVector obs1(4, pos1);
     IntervalVector obs2(4, pos2);
@@ -169,9 +169,10 @@ int main(int argc, char** argv) {
 
 
     
-    Variable vx, vy, ai, bi, t;
+    Variable vx, vy, ai, bi, t, x0, xi0;
     vector<SepInter*> listSep;
-    IntervalVector proj(3);
+    IntervalVector proj1(3);
+    IntervalVector proj2(5);
     Function* pf1;
     Function* pf2;
     Function* pf3;
@@ -191,18 +192,23 @@ int main(int argc, char** argv) {
     for ( int i = 0; i < obstacles.size(); i++){
         pf1 = new Function(vx, vy, ai, bi, t, (vx - ai)*t);
         pf2 = new Function(vx, vy, ai, bi, t, (vy - bi)*t);
-        pf3 = new Function(vx, vy, ai, bi, t, (vy - bi)/(vx - ai));
+        pf3 = new Function(vx, vy, ai, bi, t, x0, xi0, ((vy - bi)/(vx - ai))*(xi0 - x0));
 
-        proj[0] = obstacles[i][0]*cos(obstacles[i][3]);
-        proj[1] = obstacles[i][0]*sin(obstacles[i][3]);
-        proj[2] = T;
+        proj1[0] = obstacles[i][0]*cos(obstacles[i][3]);
+        proj1[1] = obstacles[i][0]*sin(obstacles[i][3]);
+        proj1[2] = T;
+        proj2[0] = proj1[0];
+        proj2[1] = proj1[1];
+        proj2[2] = proj1[2];
+        proj2[3] = boatInitPos[0];
+        proj2[4] = obstacles[i][1];
 
         pSep1 = new SepFwdBwd(*pf1, obstacles[i][1] - boatInitPos[0]);
         pSep2 = new SepFwdBwd(*pf2, obstacles[i][2] - boatInitPos[1]);
-        pSep3 = new SepFwdBwd(*pf3, (obstacles[i][2] - boatInitPos[1])/(obstacles[i][1] - boatInitPos[0]));
-        pSepProj1 = new SepProj(*pSep1, proj, 1000000);
-        pSepProj2 = new SepProj(*pSep2, proj, 1000000);
-        pSepProj3 = new SepProj(*pSep3, proj, 1000000);
+        pSep3 = new SepFwdBwd(*pf3, obstacles[i][2] - boatInitPos[1]);
+        pSepProj1 = new SepProj(*pSep1, proj1, 1000000);
+        pSepProj2 = new SepProj(*pSep2, proj1, 1000000);
+        pSepProj3 = new SepProj(*pSep3, proj2, 1000000);
 
         pSep = new SepInter(*pSepProj1, *pSepProj2, *pSepProj3);
 
